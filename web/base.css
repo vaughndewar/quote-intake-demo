@@ -1,0 +1,116 @@
+/* Ideal Consulting — one stylesheet, system fonts, light + dark. */
+:root {
+  --bg: #ffffff;
+  --bg-alt: #f3f5f8;
+  --text: #17212e;
+  --muted: #4a5666;
+  --navy: #12263f;
+  --accent: #b45309;      /* 5.0:1 on white */
+  --accent-text: #ffffff;
+  --border: #d5dbe3;
+  --focus: #1d4ed8;
+  --max: 68rem;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0e1620;
+    --bg-alt: #151f2b;
+    --text: #e8edf3;
+    --muted: #aab5c3;
+    --navy: #0a1119;
+    --accent: #f0a95b;
+    --accent-text: #0e1620;
+    --border: #2a3646;
+    --focus: #8ab4ff;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 1.0625rem/1.65 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+img { max-width: 100%; height: auto; }
+a { color: inherit; text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.skip { position: absolute; left: -999px; top: 0; background: var(--bg); padding: .75rem 1rem; z-index: 10; }
+.skip:focus { left: 0; }
+
+.wrap { width: min(100% - 2rem, var(--max)); margin-inline: auto; }
+h1, h2, h3 { line-height: 1.2; margin: 0 0 .75rem; letter-spacing: -0.01em; }
+h1 { font-size: clamp(2rem, 5vw, 3.1rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); }
+h3 { font-size: 1.15rem; }
+p { margin: 0 0 1rem; }
+.lead { font-size: 1.2rem; color: var(--muted); max-width: 42rem; }
+.eyebrow { text-transform: uppercase; letter-spacing: .08em; font-size: .8rem; font-weight: 700; color: var(--accent); margin-bottom: .5rem; }
+
+/* Header */
+.site-header { border-bottom: 1px solid var(--border); background: var(--bg); position: sticky; top: 0; z-index: 5; }
+.site-header .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1.5rem; padding-block: .75rem; }
+.brand { font-weight: 800; font-size: 1.15rem; text-decoration: none; letter-spacing: -0.01em; }
+.brand span { color: var(--accent); }
+nav ul { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; list-style: none; margin: 0; padding: 0; align-items: center; }
+nav a { text-decoration: none; padding: .35rem 0; display: inline-block; }
+nav a:hover, nav a[aria-current="page"] { text-decoration: underline; }
+
+/* Buttons */
+.btn { display: inline-block; background: var(--accent); color: var(--accent-text); font-weight: 700; text-decoration: none; padding: .8rem 1.4rem; border-radius: 8px; border: 0; cursor: pointer; font-size: 1rem; font-family: inherit; }
+.btn:hover { filter: brightness(1.08); }
+.btn-small { padding: .45rem 1rem; }
+.link-quiet { color: var(--muted); }
+
+/* Sections */
+section { padding-block: clamp(2.5rem, 6vw, 4.5rem); }
+.alt { background: var(--bg-alt); }
+.hero { padding-block: clamp(3rem, 9vw, 6rem); }
+.hero .btn { margin-top: .5rem; }
+
+.grid { display: grid; gap: 1.25rem; }
+@media (min-width: 46rem) {
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+}
+.card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.4rem; }
+.alt .card { background: var(--bg); }
+.card p:last-child { margin-bottom: 0; }
+
+.stat { font-size: clamp(1.7rem, 4vw, 2.2rem); font-weight: 800; color: var(--accent); line-height: 1.15; margin: 0 0 .4rem; }
+.stat-note { color: var(--muted); font-size: .95rem; margin: 0; }
+
+.steps { counter-reset: step; list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
+.steps li { counter-increment: step; padding-left: 3rem; position: relative; }
+.steps li::before { content: counter(step); position: absolute; left: 0; top: 0; width: 2.1rem; height: 2.1rem; border-radius: 50%; background: var(--navy); color: #fff; display: grid; place-items: center; font-weight: 700; }
+
+.cta-band { background: var(--navy); color: #fff; text-align: center; }
+.cta-band .lead { color: #cbd5e1; margin-inline: auto; }
+.cta-band .btn { background: #f0a95b; color: #0e1620; }
+
+ul.plain { padding-left: 1.2rem; }
+.small { font-size: .9rem; color: var(--muted); }
+
+/* Form */
+form { display: grid; gap: 1rem; max-width: 36rem; }
+label { font-weight: 600; display: block; margin-bottom: .3rem; }
+input, textarea { width: 100%; font: inherit; color: var(--text); background: var(--bg); border: 1px solid var(--muted); border-radius: 8px; padding: .65rem .75rem; }
+textarea { min-height: 9rem; resize: vertical; }
+.hp { position: absolute; left: -9999px; height: 0; overflow: hidden; }
+.form-msg { padding: .75rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-alt); }
+.form-msg[hidden] { display: none; }
+.form-msg.err { border-color: #b91c1c; }
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--border); padding-block: 2rem; color: var(--muted); font-size: .95rem; }
+.site-footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; }
+
+/* Utilities */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.card h2 { font-size: 1.15rem; margin-bottom: .75rem; }
+
+/* On phones the wrapped nav is tall, so let it scroll away instead of staying pinned. */
+@media (max-width: 40rem) {
+  .site-header { position: static; }
+}

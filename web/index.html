@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quote request intake demo</title>
+<meta name="description" content="A demo of turning messy customer emails into a checked, structured request, with a person approving, and measuring how well it works on a labelled test set. Made-up data, plain rules, no AI model.">
+<meta name="color-scheme" content="light dark">
+<link rel="stylesheet" href="base.css">
+<link rel="stylesheet" href="qi.css">
+<script src="extractor.js" defer></script>
+<script src="qi.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="wrap"><span class="brand">Quote request intake <span>demo</span></span></div>
+</header>
+
+<main id="main">
+  <section>
+    <div class="wrap">
+      <div class="intro">
+        <h1>Quote request intake</h1>
+        <p class="lead">Quote requests arrive as free-form emails. Someone reads each one, finds the product codes and quantities, checks them, and chases whatever is missing. This demo does the reading and checking, hands the decision to a person, and measures its own accuracy. Every email, customer and product here is made up.</p>
+        <p class="note"><strong>Honest label:</strong> no AI model runs in this demo. The reader is a set of plain rules, because the point is everything around the reader: the checks, the hand-off to a person, and the measurement. An AI model could replace the rules and the rest would stay.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" aria-labelledby="try">
+    <div class="wrap">
+      <h2 id="try">Read a request</h2>
+      <div class="qi-grid">
+        <div class="qi-input">
+          <label for="sample">Pick a made-up request</label>
+          <select id="sample"></select>
+          <label for="text" style="margin-top:1rem">Request text <span class="small">(edit it, or type your own made-up one)</span></label>
+          <textarea id="text" rows="9" spellcheck="false"></textarea>
+          <p class="small">It runs in your browser. Nothing you type is sent anywhere. Please do not paste real customer emails.</p>
+        </div>
+        <div class="qi-output" aria-live="polite">
+          <div class="decision" id="decision" role="status"></div>
+          <h3>What it read</h3>
+          <div class="table-wrap" id="read-table" role="region" aria-label="What the reader found" tabindex="0"></div>
+          <h3>Checks</h3>
+          <ul class="checklist" id="checklist"></ul>
+          <h3 id="draft-title">Draft reply</h3>
+          <pre class="draft" id="draft" tabindex="0"></pre>
+          <p class="small">Drafts are never sent automatically. A person reads and approves them.</p>
+        </div>
+      </div>
+      <noscript><p>This demo needs JavaScript to read the request.</p></noscript>
+    </div>
+  </section>
+
+  <section aria-labelledby="person">
+    <div class="wrap">
+      <h2 id="person">Where a person fits</h2>
+      <ol class="steps">
+        <li><strong>Read.</strong> The reader pulls out the customer, products, quantities, needed-by date, PO and ship-to.</li>
+        <li><strong>Check.</strong> It tests the request against the catalogue: is the product code real, is the quantity at or above the minimum, does the date allow for the lead time.</li>
+        <li><strong>Route.</strong> A complete request goes to a person to price. An incomplete one gets a drafted follow-up. Anything the reader is unsure about is handed straight to a person instead of guessed.</li>
+        <li><strong>Approve.</strong> Nothing is entered into an order system or sent to a customer without a person saying yes.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="alt" aria-labelledby="how-well">
+    <div class="wrap">
+      <h2 id="how-well">How well does it work?</h2>
+      <p class="lead">Automation you cannot measure is automation you cannot trust. This runs the reader, live in your browser, over <span id="n-total">80</span> labelled made-up requests where the right answer is known.</p>
+      <div class="tiles" id="tiles"></div>
+      <p id="silent-note"></p>
+
+      <h3>By kind of request</h3>
+      <div class="table-wrap" id="cat-table" role="region" aria-label="Results by kind of request" tabindex="0"></div>
+      <h3 style="margin-top:2rem">By field</h3>
+      <div class="table-wrap" id="field-table" role="region" aria-label="Results by field" tabindex="0"></div>
+
+      <details class="more" id="miss-details">
+        <summary>Fields it did not read correctly</summary>
+        <div class="table-wrap" id="miss-table" role="region" aria-label="Fields not read correctly" tabindex="0"></div>
+      </details>
+
+      <h3 style="margin-top:2.5rem">Read this before trusting the score</h3>
+      <p>The same person wrote the reader and the test emails, which flatters the reader. A real test uses real past requests, including ones nobody thought of in advance. And a good score on the cases you can imagine says nothing about the ones you cannot. These three realistic requests fool the reader without any warning:</p>
+      <div class="grid grid-3" id="weak"></div>
+      <p style="margin-top:1rem">This is why a person approves every request. The goal of the automation is to remove the routine reading and checking, not the judgment.</p>
+    </div>
+  </section>
+
+  <section aria-labelledby="how">
+    <div class="wrap">
+      <div class="explain">
+        <h2 id="how">How it works</h2>
+        <ol class="steps">
+          <li><strong>Labelled test data.</strong> A seeded Python script writes 80 made-up emails in four styles (clean, informal, tricky and incomplete) with the correct answer for each, so the reader can be scored. It is not based on any real company&rsquo;s emails or catalogue.</li>
+          <li><strong>One reader, shared.</strong> The same JavaScript reads the sample you pick and the whole test set, so the score on this page is the score of the code you are using.</li>
+          <li><strong>Rules decide the route.</strong> Required fields, the catalogue, minimum quantities and lead times are explicit checks. When the reader is unsure (a quantity written in words, a date like 28/11) it says so and hands the request to a person.</li>
+          <li><strong>The page measures it.</strong> Decisions are scored as correct, handed to a person, or wrong, and the one that matters most, marking a bad request as ready, is counted on its own.</li>
+        </ol>
+        <p style="margin-top:1rem">In a real engagement the reader is usually an AI model, which copes with messier text than rules can. The checks, the hand-off, the human approval and the measurement stay the same, and the same test set tells you whether the model is good enough before it touches live work.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div>Built by Vaughn Dewar, <a href="https://www.idealconsulting.ca/" rel="noopener">Ideal Consulting</a>, Toronto. MIT License.</div>
+    <div>All data is made up.</div>
+  </div>
+</footer>
+</body>
+</html>
